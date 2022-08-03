@@ -10,11 +10,12 @@ config = {
   "messagingSenderId": "573878428747",
   "appId": "1:573878428747:web:2aebcb6dd0a166882759ce",
   "measurementId": "G-X2BSVG1JHX",
-  "databaseURL":""
+  "databaseURL":"https://personal-project-51039-default-rtdb.europe-west1.firebasedatabase.app/"
 }
 
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
+db = firebase.database()
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['SECRET_KEY'] = 'super-secret-key'
@@ -31,18 +32,24 @@ def login():
             return redirect(url_for('home'))
         except:
             error = "Authentication failed."
-    return render_template("login.html")
+    try:
+        numOfUsers = len(db.child("Users").get().val())
+    except:
+        numOfUsers = 0
+    return render_template("login.html", numOfUsers=numOfUsers)
 
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
+        name = request.form['name']
         email = request.form['email']
         password = request.form['password']
         group = request.form.get('group')
-        print(group)
         try:
             login_session['user'] = auth.create_user_with_email_and_password(email, password)
+            user = {"name": name, "email":email, "password":password, "group":group, "balance":500}
+            db.child("Users").child(login_session['user']['localId']).set(user)
             return redirect(url_for('home'))
         except:
             error = "Authentication failed."
@@ -50,8 +57,20 @@ def signup():
 
 @app.route('/home', methods=['GET', 'POST'])
 def home():
-    return render_template("home.html")
+    return render_template("home.html", user=db.child("Users").child(login_session['user']['localId']).get().val())
+
+
+
+@app.route('/transfer', methods=['GET', 'POST'])
+def transfer():
+    if request.method == 'POST':
+        other_email = request.form['other_email']
+    else:
+        return render_template("transfer.html", user=db.child("Users").child(login_session['user']['localId']).get().val(), users=db.child("Users").get().val())
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+#add dialog box to confirm money transfer
