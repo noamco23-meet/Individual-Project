@@ -98,9 +98,9 @@ document.addEventListener("click", function (e) {
 }
 
 /*An array containing all the country names in the world:*/
-function myFunc(vars) {
-    return vars
-}
+var emails = document.getElementById("hidden")
+//var emails = myFunc( {{users|tojson}} );
+document.getElementById("test").innerHTML = emails;
 
 //get emails from flask
 /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/

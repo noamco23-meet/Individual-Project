@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import session as login_session
 import pyrebase
-
+from collections import OrderedDict
+import json
 config = {
   "apiKey": "AIzaSyBwW3x-5gkCMy3bhaeOFXkcgaUGJmpGjyw",
   "authDomain": "personal-project-51039.firebaseapp.com",
@@ -48,7 +49,7 @@ def signup():
         group = request.form.get('group')
         try:
             login_session['user'] = auth.create_user_with_email_and_password(email, password)
-            user = {"name": name, "email":email, "password":password, "group":group, "balance":500}
+            user = {"name": name, "email":email, "password":password, "group":group, "balance":500, "history":[]}
             db.child("Users").child(login_session['user']['localId']).set(user)
             return redirect(url_for('home'))
         except:
@@ -64,16 +65,38 @@ def home():
 @app.route('/transfer', methods=['GET', 'POST'])
 def transfer():
     if request.method == 'POST':
+
         other_email = request.form['other_email']
-        print(db.child("Users").get().val())
+        amount = int(request.form['amount'])
+
         for user in db.child("Users").get().val():
-            user_dict = db.child("Users").child(user).get().val()
-            if user_dict["email"].equal(other_email):
-                print(user['email'])
+
+            user_dict = json.loads(json.dumps(db.child("Users").child(user).get().val()))
+
+            if user_dict["email"] == other_email:
+                second_user_localId = user
+                second_user_name = user_dict['name']
+                final_second_user_dict = user_dict
+        try:
+            first_user_new_balance={'balance':db.child("Users").child(login_session['user']['localId']).get().val()['balance'] - amount}
+            print(first_user_new_balance)
+            db.child("Users").child(login_session['user']['localId']).update(first_user_new_balance)
+            second_user_new_balance = {'balance':((final_second_user_dict['balance']) + amount)}
+            print(second_user_new_balance)
+            db.child("Users").child(second_user_localId).update(second_user_new_balance)
+
+            
+            db.child("Users").child(login_session['user']['localId']).update(db.child("Users").child(login_session['user']['localId'])['history'].append[f"Sent {amount} to {second_user_name}"])
+
+        except:
+
+            error = "Error while transferring money"
         return redirect(url_for('home'))
     else:
+
         user = db.child("Users").child(login_session['user']['localId']).get().val()
         users = db.child("Users").get().val()
+
         return render_template("transfer.html", user=user, users=users)
 
 

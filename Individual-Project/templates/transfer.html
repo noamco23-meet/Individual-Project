@@ -10,7 +10,7 @@
         <div class="navbar">
             <img src="logo.png" class="logo">
             <ul>
-                <li><a href="#">SOMETHING</a></li>
+                <li><a href="/signup">Sign up!</a></li>
                 <li><a href="#">SOMETHING</a></li>
                 <li><a href="#">SOMETHING</a></li>
                 <li><a href="#">SOMETHING</a></li>
@@ -26,16 +26,12 @@
             <span>
                 <div class="autocomplete">
                 </div><input id="email" type="email" name="other_email" placeholder="Other Email"></span>
+                <input type="number" name="amount" placeholder="Amount">
             <input type="submit" value="Transfer Money">
         </form>
         <p id="test"></p>
     </div>
 
     <script type="text/javascript" src="../static/js/transfer.js"></script>
-    <script type="text/javascript">
-
-        var emails = myFunc( {{users|tojson}} );
-        document.getElementById("test").innerHTML = emails;
-     </script>
     </body>
 </html> 
