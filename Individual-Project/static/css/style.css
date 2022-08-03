@@ -34,7 +34,6 @@
 .navbar ul li a {
     text-decoration: none;
     color: #837E7C;
-    text-transform: uppercase;
 }
 
 .navbar ul li::after{
@@ -220,3 +219,12 @@ span{
 button:hover span{
     width: 100%;
 }
+
+.operation{
+    margin: 5px;
+    padding: 10px, 20px, 20px, 20px;
+    height: 40px;
+    background-color: #009688;
+    border-radius: 4px;
+}
+

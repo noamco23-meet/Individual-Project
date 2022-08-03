@@ -34,10 +34,17 @@ def login():
         except:
             error = "Authentication failed."
     try:
-        numOfUsers = len(db.child("Users").get().val())
+        num_of_users = len(db.child("Users").get().val())
+        total_amount_stored = 0
+
+        for user in db.child("Users").get().val():
+
+            user_dict = json.loads(json.dumps(db.child("Users").child(user).get().val()))
+            total_amount_stored += user_dict['balance']
+        
     except:
-        numOfUsers = 0
-    return render_template("login.html", numOfUsers=numOfUsers)
+        num_of_users = 0
+    return render_template("login.html", num_of_users=num_of_users, total_amount_stored=total_amount_stored)
 
 
 @app.route("/signup", methods=['GET', 'POST'])
@@ -49,7 +56,7 @@ def signup():
         group = request.form.get('group')
         try:
             login_session['user'] = auth.create_user_with_email_and_password(email, password)
-            user = {"name": name, "email":email, "password":password, "group":group, "balance":500, "history":[]}
+            user = {"name": name, "email":email, "password":password, "group":group, "balance":500, "history":{"Started account":"Creation"}}
             db.child("Users").child(login_session['user']['localId']).set(user)
             return redirect(url_for('home'))
         except:
@@ -78,15 +85,15 @@ def transfer():
                 second_user_name = user_dict['name']
                 final_second_user_dict = user_dict
         try:
-            first_user_new_balance={'balance':db.child("Users").child(login_session['user']['localId']).get().val()['balance'] - amount}
-            print(first_user_new_balance)
+            first_user_new_balance={'balance' : db.child("Users").child(login_session['user']['localId']).get().val()['balance'] - amount}
             db.child("Users").child(login_session['user']['localId']).update(first_user_new_balance)
             second_user_new_balance = {'balance':((final_second_user_dict['balance']) + amount)}
-            print(second_user_new_balance)
             db.child("Users").child(second_user_localId).update(second_user_new_balance)
 
-            
-            db.child("Users").child(login_session['user']['localId']).update(db.child("Users").child(login_session['user']['localId'])['history'].append[f"Sent {amount} to {second_user_name}"])
+            new_history_first_user = {f"Payed ${amount} to {second_user_name}": "Payment"}
+            new_history_second_user = {f"Received ${amount} from {second_user_name}": "#baller"}
+            db.child("Users").child(login_session['user']['localId']).child('history').update(new_history_first_user)
+            db.child("Users").child(second_user_localId).child('history').update(new_history_second_user)
 
         except:
 
@@ -100,6 +107,17 @@ def transfer():
         return render_template("transfer.html", user=user, users=users)
 
 
+@app.route('/history')
+def history():
+    print(json.loads(json.dumps(db.child("Users").child(login_session['user']['localId']).get().val())))
+    return render_template("history.html", history_list = json.loads(json.dumps(db.child("Users").child(login_session['user']['localId']).get().val()))['history'])
+
+
+@app.route('/logout')
+def logout():
+    login_session['user'] = None
+    auth.current_user = None
+    return redirect(url_for('login'))
 if __name__ == '__main__':
     app.run(debug=True)
 
