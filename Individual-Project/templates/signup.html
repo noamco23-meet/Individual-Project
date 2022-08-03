@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <title></title>
+</head>
+<body>
+    <div class="banner">
+        <div class="navbar">
+            <img src="logo.png" class="logo">
+            <ul>
+                <li><a href="#">SOMETHING</a></li>
+                <li><a href="#">SOMETHING</a></li>
+                <li><a href="#">SOMETHING</a></li>
+                <li><a href="#">SOMETHING</a></li>
+            </ul>
+
+        </div>
+    </div>
+
+    <div class="content">
+        <h1>Thank you for choosing our bank!</h1>
+        <h2>Enter your credentials below:</h2>
+    </div>
+
+    <div class="center">
+        <h1>Sign up</h1>
+        <form action="/signup" method="POST">
+            <div class="txt_field">
+                <input type="text" name="name" required>
+               <span></span>
+                <label>Full Name</label>
+            </div>
+            <div class="select_field">
+                <select name="group">
+                    {% for group in GROUPS %}
+                    <option value="{{group}}" class="select_option">{{group}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="txt_field">
+                <input type="email" name="email" required>
+               <span></span>
+                <label>Email</label>
+            </div>
+            <div class="txt_field">
+                <input type="password" name="password" required>
+                <span></span>
+                <label>Password</label>
+            </div>
+            <input type="submit" value="Sign up!">
+        </form>
+        <div class="signup_link">Already a member?<a href="/"> Log in!</a></div>
+    </div>
+    
+</body>
+</html>
