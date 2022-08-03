@@ -65,8 +65,16 @@ def home():
 def transfer():
     if request.method == 'POST':
         other_email = request.form['other_email']
+        print(db.child("Users").get().val())
+        for user in db.child("Users").get().val():
+            user_dict = db.child("Users").child(user).get().val()
+            if user_dict["email"].equal(other_email):
+                print(user['email'])
+        return redirect(url_for('home'))
     else:
-        return render_template("transfer.html", user=db.child("Users").child(login_session['user']['localId']).get().val(), users=db.child("Users").get().val())
+        user = db.child("Users").child(login_session['user']['localId']).get().val()
+        users = db.child("Users").get().val()
+        return render_template("transfer.html", user=user, users=users)
 
 
 if __name__ == '__main__':

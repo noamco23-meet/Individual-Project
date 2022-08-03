@@ -21,16 +21,21 @@
 
     <div class="content">
         <h1>Money Transfer</h1>
-        <form method="POST" action="#">
+        <form method="POST" action="/transfer">
             <input type="email" placeholder="{{user['email']}}" disabled>
             <span>
                 <div class="autocomplete">
                 </div><input id="email" type="email" name="other_email" placeholder="Other Email"></span>
             <input type="submit" value="Transfer Money">
         </form>
+        <p id="test"></p>
     </div>
 
-    <script src="../static/js/transfer.js"></script>
-    
+    <script type="text/javascript" src="../static/js/transfer.js"></script>
+    <script type="text/javascript">
+
+        var emails = myFunc( {{users|tojson}} );
+        document.getElementById("test").innerHTML = emails;
+     </script>
     </body>
-</html>
+</html> 
