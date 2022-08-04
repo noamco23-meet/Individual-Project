@@ -12,24 +12,24 @@
             <ul>
                 <li><a href="/home">Home</a></li>
                 <li><a href="/transfer">Make a payment</a></li>
-                <li><a href="/logout">Log out</a></li>
+                <li><a href="/logout">Log out!</a></li>
             </ul>
 
         </div>
     </div>
 
     <div class="content">
-        <h1>Account History:</h1>
+        <h1>All of our current users:</h1>
     </div>
 
     <div class="center">
-        {% for action, type in history_list.items() %}
-            <div class="operation">
-                <h4>{{type}}</h4>
-                <p>{{action}}</p>
-            </div>
+        {% for loginId, user_info in users.items() %}
+        <div class="operation">
+            <h3>{{user_info['name']}}</h3>
+            <h4>Balance: {{user_info['balance']}}</h4>
+        </div>
         {% endfor %}
     </div>
     
 </body>
-</html>
+</html> 

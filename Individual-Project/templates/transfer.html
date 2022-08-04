@@ -8,12 +8,11 @@
 <body>
     <div class="banner">
         <div class="navbar">
-            <img src="logo.png" class="logo">
+            <img src="../static/media/logo.png" class="logo">
             <ul>
-                <li><a href="/signup">Sign up!</a></li>
-                <li><a href="#">SOMETHING</a></li>
-                <li><a href="#">SOMETHING</a></li>
-                <li><a href="#">SOMETHING</a></li>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/transfer">Make a payment</a></li>
+                <li><a href="/logout">Log out</a></li>
             </ul>
 
         </div>
@@ -21,15 +20,16 @@
 
     <div class="content">
         <h1>Money Transfer</h1>
-        <form method="POST" action="/transfer">
-            <input type="email" placeholder="{{user['email']}}" disabled>
-            <span>
-                <div class="autocomplete">
-                </div><input id="email" type="email" name="other_email" placeholder="Other Email"></span>
-                <input type="number" name="amount" placeholder="Amount">
-            <input type="submit" value="Transfer Money">
-        </form>
-        <p id="test"></p>
+        <h3>Send money to other users</h2>
+        <div class="transfer">
+            <form method="POST" action="/transfer">
+                <input type="email" placeholder="{{user['email']}} (Your email)" disabled>
+                <span>
+                    <input id="email" type="email" name="other_email" placeholder="Other Email"></span>
+                    <input type="number" name="amount" placeholder="Amount">
+                <input type="submit" value="Transfer Money">
+            </form>
+        </div>
     </div>
 
     <script type="text/javascript" src="../static/js/transfer.js"></script>

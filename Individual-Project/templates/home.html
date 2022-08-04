@@ -8,12 +8,11 @@
 <body>
     <div class="banner">
         <div class="navbar">
-            <img src="logo.png" class="logo">
+            <img src="../static/media/logo.png"" class="logo">
             <ul>
-                <li><a href="/logout">Log out!</a></li>
-                <li><a href="#">SOMETHING</a></li>
-                <li><a href="#">SOMETHING</a></li>
-                <li><a href="#">SOMETHING</a></li>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/transfer">Make a payment</a></li>
+                <li><a href="/logout">Log out</a></li>
             </ul>
 
         </div>
@@ -22,10 +21,11 @@
     <div class="content">
         <h2>Hello, {{user['name']}}</h2>
         <h1>Your balance: {{user['balance']}}</h1>
+        <h2>Your last action was: {{action}}</h2>
         <div>
             <a href="/transfer"><button><span></span>Transfer Money</button></a>
             <a href="/history"><button><span></span>Account History</button></a>
-            <a href="#"><button><span></span>Leaderboard</button></a>
+            <a href="/user_hall"><button><span></span>All Users</button></a>
         </div>
     </div>
 
