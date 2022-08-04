@@ -24,7 +24,7 @@
 }
 
 .logo {
-    width: 60px;
+    width: 40px;
     cursor: pointer;
 }
 
@@ -65,11 +65,11 @@
 
 .content h1{
     font-size: 70px;
-    margin-top: 80px;
+    margin-top: 40px;
 }
 
 .content h3 {
-    margin: 20px auto;
+    margin: 10px;
     font-weight: 100;
     line-height: 25px;
 }
@@ -153,7 +153,11 @@ form .select_field{
     margin: -5px 0 20px 5px;
     color: #a6a6a6;
     cursor:pointer;
+}
 
+.forgot_password a{
+    color: #a6a6a6;
+    text-decoration: none;
 }
 
 .forgot_password:hover{

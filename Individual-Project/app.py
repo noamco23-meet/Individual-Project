@@ -39,6 +39,10 @@ def find_user_through_email(email):
     return [second_user_localId, second_user_name, final_second_user_dict]
 
 
+@app.route('/we_do_not_care')
+def we_do_not_care():
+    return render_template("we_do_not_care.html")
+
 @app.route("/", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
