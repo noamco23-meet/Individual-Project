@@ -30,11 +30,13 @@
                 <label>Full Name</label>
             </div>
             <div class="select_field">
-                <select name="group">
+                <label class="custom-selector">Your Group:
+                <select name="sex">
                     {% for group in GROUPS %}
                     <option value="{{group}}" class="select_option">{{group}}</option>
                     {% endfor %}
                 </select>
+                </label>
             </div>
             <div class="txt_field">
                 <input type="email" name="email" required>
@@ -47,6 +49,9 @@
                 <label>Password</label>
             </div>
             <input type="submit" value="Sign up!">
+            {% if error %}
+                <p id="error">{{error_msg}}</p>
+            {% endif %}
         </form>
         <div class="signup_link">Already a member?<a href="/"> Log in!</a></div>
     </div>

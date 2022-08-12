@@ -45,17 +45,9 @@ def we_do_not_care():
 
 @app.route("/", methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        try:
-            login_session['user'] = auth.sign_in_with_email_and_password(email, password)
-            return redirect(url_for('home'))
-        except:
-            error = "Authentication failed."
+    total_amount_stored = 0
     try:
         num_of_users = len(db.child("Users").get().val())
-        total_amount_stored = 0
 
         for user in db.child("Users").get().val():
 
@@ -64,6 +56,17 @@ def login():
         
     except:
         num_of_users = 0
+
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        try:
+            login_session['user'] = auth.sign_in_with_email_and_password(email, password)
+            return redirect(url_for('home'))
+        except:
+            error_msg = "The email or password is incorrect. Try again."
+            return render_template("login.html", num_of_users=num_of_users, total_amount_stored=total_amount_stored, error_msg=error_msg, error=True)
+    
     return render_template("login.html", num_of_users=num_of_users, total_amount_stored=total_amount_stored)
 
 
@@ -80,7 +83,8 @@ def signup():
             db.child("Users").child(login_session['user']['localId']).set(user)
             return redirect(url_for('home'))
         except:
-            error = "Authentication failed."
+            error_msg = "The email you used is already registered. Try again with a new email."
+            return render_template("signup.html", error_msg=error_msg, GROUPS=GROUPS, error=True)
     return render_template("signup.html", GROUPS=GROUPS)
 
 @app.route('/home', methods=['GET', 'POST'])
@@ -92,19 +96,30 @@ def home():
 
 @app.route('/transfer', methods=['GET', 'POST'])
 def transfer():
+
+    user = db.child("Users").child(login_session['user']['localId']).get().val()
+    users = db.child("Users").get().val()
+
     if request.method == 'POST':
 
         other_email = request.form['other_email']
+        if other_email == db.child("Users").child(login_session['user']['localId']).get().val()['email']:
+            return render_template("transfer.html", user=user, users=users, error_msg="Nice try, but no.", error=True)
+       
         amount = int(request.form['amount'])
-
-        user_info = find_user_through_email(other_email)
-        second_user_localId = user_info[0]
-        second_user_name = user_info[1]
-        final_second_user_dict = user_info[2]
+        if amount < 0:
+            return render_template("transfer.html", user=user, users=users, error_msg="You can't pay people negative amounts. Sorry :/", error=True)
 
         try:
+
+            user_info = find_user_through_email(other_email)
+            second_user_localId = user_info[0]
+            second_user_name = user_info[1]
+            final_second_user_dict = user_info[2]
+
             first_user_new_balance={'balance' : db.child("Users").child(login_session['user']['localId']).get().val()['balance'] - amount}
             db.child("Users").child(login_session['user']['localId']).update(first_user_new_balance)
+            
             second_user_new_balance = {'balance':((final_second_user_dict['balance']) + amount)}
             db.child("Users").child(second_user_localId).update(second_user_new_balance)
 
@@ -118,20 +133,19 @@ def transfer():
             db.child("Users").child(second_user_localId).child('history').update(new_history_second_user)
 
         except:
-
-            error = "Error while transferring money"
+            return render_template("transfer.html", user=user, users=users, error_msg="Oh man, we couldn't find that user. Try again?", error=True)
+        
         return redirect(url_for('home'))
     else:
 
-        user = db.child("Users").child(login_session['user']['localId']).get().val()
-        users = db.child("Users").get().val()
+        
 
         return render_template("transfer.html", user=user, users=users)
 
 
 @app.route('/history')
 def history():
-    return render_template("history.html", history_list = json.loads(json.dumps(db.child("Users").child(login_session['user']['localId']).get().val()))['history'])
+    return render_template("history.html", history_list = db.child("Users").child(login_session['user']['localId']).get().val()['history'])
 
 # @app.route('/leaderboard')
 # def leaderboard():

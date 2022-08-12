@@ -25,11 +25,14 @@
             <form method="POST" action="/transfer">
                 <input type="email" placeholder="{{user['email']}} (Your email)" disabled>
                 <span>
-                    <input id="email" type="email" name="other_email" placeholder="Other Email"></span>
+                    <input type="email" name="other_email" placeholder="Other Email"></span>
                     <input type="number" name="amount" placeholder="Amount">
                 <input type="submit" value="Transfer Money">
             </form>
         </div>
+        {% if error %}
+        <p id="error">{{error_msg}}</p>
+    {% endif %}
     </div>
 
     <script type="text/javascript" src="../static/js/transfer.js"></script>

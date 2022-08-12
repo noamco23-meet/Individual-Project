@@ -35,6 +35,9 @@
                 <span></span>
                 <label>Password</label>
             </div>
+            {% if error %}
+                <p id="error">{{error_msg}}</p>
+            {% endif %}
             <div class="forgot_password"><a href="/we_do_not_care">Forgot Password?</a></div>    
             <input type="submit" value="Log in">
         </form>

@@ -1,0 +1,20 @@
+.center{
+    width:500px;
+    padding: 10px;
+}
+.operation{
+    height: 100px;
+    margin-top: 3px;
+    background-color: #009688;
+    border-radius: 4px;
+}
+
+h4 {
+    margin: 10px;
+    font-weight: bolder;
+    size: 20px;
+}
+
+p {
+    margin: 10px;
+}
